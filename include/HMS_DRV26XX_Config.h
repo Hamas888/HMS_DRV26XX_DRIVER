@@ -95,8 +95,8 @@
     #define HMS_DRV26XX_REG_AUDIOOUTMIN         0x14            // Audio-to-vibe minimum output drive register
     #define HMS_DRV26XX_REG_AUDIOOUTMAX         0x15            // Audio-to-vibe maximum output drive register
     #define HMS_DRV26XX_REG_AUTOCALCOMP         0x18            // Auto-calibration compensation result register
-#else if defined(HMS_DRV26XX_DRV2625)
-    #error "DRV2625 is not supported yet, please use DRV2605"
+#else
+    #error "No DRV26XX device defined."
 #endif 
 
 #endif // HMS_DRV26XX_CONFIG_H
