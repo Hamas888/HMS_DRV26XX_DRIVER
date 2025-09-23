@@ -1,0 +1,59 @@
+{
+  "name": "HMS_DRV26XX_DRIVER",
+  "version": "1.0.0",
+  "description": "This Package Provide DRV26XX Haptic Driver Library for Cross Platform (STM/ESP/nRF)",
+  "keywords": [
+    "Haptic",
+    "DRV26XX",
+    "Driver",
+    "ESP32",
+    "STM32",
+    "nRF52",
+    "I2C",
+    "Vibration",
+    "Motor",
+    "Feedback"
+  ],
+  "authors": [
+    {
+      "name": "Hamas Saeed",
+      "email": "hamasaeed888@gmail.com",
+      "url": "https://github.com/Hamas888",
+      "maintainer": true
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hamas888/HMS_DRV26XX_DRIVER.git"
+  },
+  "frameworks": ["arduino", "espidf"],
+  "platforms": ["espressif32"],
+  "build": {
+    "flags": [
+      "-std=gnu++17"
+    ],
+    "unflags": [
+      "-std=gnu++11"
+    ]
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Hamas888/HMS_DRV26XX_DRIVER",
+  "examples": [
+    "examples"
+  ],
+  "export": {
+    "include": [
+      "include",
+      "src",
+      "examples",
+      "library.json",
+      "LICENSE",
+      "README.md"
+    ],
+    "exclude": [
+      "test",
+      ".pio",
+      ".vscode"
+    ]
+  }
+}
