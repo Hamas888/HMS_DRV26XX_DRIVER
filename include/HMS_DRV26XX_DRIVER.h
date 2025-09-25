@@ -56,12 +56,19 @@
   #include <Arduino.h>
 #elif defined(HMS_DRV26XX_PLATFORM_ESP_IDF)
 #elif defined(HMS_DRV26XX_PLATFORM_ZEPHYR)
+  #include <stdio.h>
+  #include <zephyr/device.h>
+  #include <zephyr/drivers/i2c.h>
 #elif defined(HMS_DRV26XX_PLATFORM_STM32_HAL)
 #endif
 
 #endif // HMS_DRV26XX_DRIVER_H
 
 #include "HMS_DRV26XX_Config.h"
+
+#if defined(HMS_DRV26XX_DEBUG_ENABLED) && (HMS_DRV26XX_DEBUG_ENABLED == 1)
+  #define HMS_DRV26XX_LOGGER_ENABLED
+#endif
 
 typedef enum {
     HMS_DRV26XX_OK       = 0x00,
@@ -82,7 +89,7 @@ public:
     #elif defined(HMS_DRV26XX_PLATFORM_ESP_IDF)
     HMS_DRV26XX_StatusTypeDef begin(i2c_port_t i2c_port = I2C_NUM_0);
     #elif defined(HMS_DRV26XX_PLATFORM_ZEPHYR)
-    HMS_DRV26XX_StatusTypeDef begin(struct device *i2c_dev);
+    HMS_DRV26XX_StatusTypeDef begin(const struct device *i2c_dev);
     #elif defined(HMS_DRV26XX_PLATFORM_STM32_HAL)
     HMS_DRV26XX_StatusTypeDef begin(I2C_HandleTypeDef *hi2c);
     #endif
@@ -115,6 +122,7 @@ private:
     I2C_HandleTypeDef *drv6xx_hi2c;
   #endif
 
+  void init();
   uint8_t readRegister(uint8_t reg);
   void writeRegister(uint8_t reg, uint8_t val);
 

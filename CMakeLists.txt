@@ -4,10 +4,8 @@ set(HMS_DRV26XX_VERSION 1.0.0)
 
 # Check if we're building with Zephyr
 if(DEFINED ZEPHYR_BASE)
-
-    zephyr_library()
-    zephyr_library_sources(src/*.cpp)
     zephyr_include_directories(include)
+    zephyr_library_sources(src/HMS_DRV26XX_DRIVER.cpp)
 
 # Check if we're building with ESP-IDF
 elseif(IDF_PROJECT)

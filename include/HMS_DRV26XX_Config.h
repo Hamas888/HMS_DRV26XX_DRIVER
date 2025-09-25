@@ -39,10 +39,23 @@
 #ifndef HMS_DRV26XX_CONFIG_H
 #define HMS_DRV26XX_CONFIG_H
 
+/*
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │ Note:     Enable only if ChronoLog is included                      │
+    │ Requires: ChronoLog library → https://github.com/Hamas888/ChronoLog │
+    └─────────────────────────────────────────────────────────────────────┘
+*/
+#define HMS_DRV26XX_DEBUG_ENABLED               1               // Enable debug messages (1=enabled, 0=disabled)
+
+
+/*
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │ Note:    Driver selection for DRV26XX devices                       │
+    │ Support: DRV2605                                                    │
+    └─────────────────────────────────────────────────────────────────────┘
+*/
 #define HMS_DRV26XX_DRV2605                                     // Define the DRV26XX device to be used
 // #define HMS_DRV26XX_DRV2625                                     // Define the DRV26XX device to be used
-
-
 
 
 
