@@ -96,7 +96,15 @@ public:
     void selectLibrary(uint8_t library);
     void setWaveform(uint8_t slot, uint8_t waveform);
 
+    bool isERMDriver() const            { return isERM;                   }
+    bool isLRADriver() const            { return isLRA;                   }
+    const char* getDeviceName() const   { return HMS_DRV26XX_DEVICE_NAME; }
+    uint8_t getDeviceAddress() const    { return HMS_DRV26XX_DEVICE_ADDR; }
+
 private:
+  bool isERM        = true;
+  bool isLRA        = false;
+  bool initialized  = false;
   #if defined(HMS_DRV26XX_PLATFORM_ARDUINO)
     TwoWire *drv6xx_wire = NULL;
   #elif defined(HMS_DRV26XX_PLATFORM_ESP_IDF)

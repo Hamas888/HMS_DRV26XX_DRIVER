@@ -1,0 +1,3 @@
+version: 1.0.0
+description: "A DRV26XX Haptic Driver Library for ESP-IDF"
+url: "https://github.com/Hamas888/HMS_DRV26XX_DRIVER"

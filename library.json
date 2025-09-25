@@ -1,7 +1,7 @@
 {
   "name": "HMS_DRV26XX_DRIVER",
   "version": "1.0.0",
-  "description": "This Package Provide DRV26XX Haptic Driver Library for Cross Platform (STM/ESP/nRF)",
+  "description": "This Package Provide DRV26XX Haptic Driver Library for Cross Platform (ARDUINO/STM/ESP/nRF)",
   "keywords": [
     "Haptic",
     "DRV26XX",
