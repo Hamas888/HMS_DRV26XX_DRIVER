@@ -45,7 +45,7 @@
     │ Requires: ChronoLog library → https://github.com/Hamas888/ChronoLog │
     └─────────────────────────────────────────────────────────────────────┘
 */
-#define HMS_DRV26XX_DEBUG_ENABLED               1               // Enable debug messages (1=enabled, 0=disabled)
+#define HMS_DRV26XX_DEBUG_ENABLED               0               // Enable debug messages (1=enabled, 0=disabled)
 
 
 /*
