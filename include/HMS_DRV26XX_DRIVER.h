@@ -85,13 +85,21 @@ public:
     ~HMS_DRV26XX();
 
     #if defined(HMS_DRV26XX_PLATFORM_ARDUINO)
-    HMS_DRV26XX_StatusTypeDef begin(TwoWire *theWire = &Wire);
+    HMS_DRV26XX_StatusTypeDef begin(
+      TwoWire *theWire = &Wire, uint8_t address = HMS_DRV26XX_DEVICE_ADDR
+    );
     #elif defined(HMS_DRV26XX_PLATFORM_ESP_IDF)
-    HMS_DRV26XX_StatusTypeDef begin(i2c_port_t i2c_port = I2C_NUM_0);
+    HMS_DRV26XX_StatusTypeDef begin(
+      i2c_port_t i2c_port = I2C_NUM_0, uint8_t address = HMS_DRV26XX_DEVICE_ADDR
+    );
     #elif defined(HMS_DRV26XX_PLATFORM_ZEPHYR)
-    HMS_DRV26XX_StatusTypeDef begin(const struct device *i2c_dev);
+    HMS_DRV26XX_StatusTypeDef begin(
+      const struct device *i2c_dev = NULL, uint8_t address = HMS_DRV26XX_DEVICE_ADDR
+    );
     #elif defined(HMS_DRV26XX_PLATFORM_STM32_HAL)
-    HMS_DRV26XX_StatusTypeDef begin(I2C_HandleTypeDef *hi2c);
+    HMS_DRV26XX_StatusTypeDef begin(
+      I2C_HandleTypeDef *hi2c = NULL, uint8_t address = HMS_DRV26XX_DEVICE_ADDR
+    );
     #endif
     
     void stop();
@@ -106,12 +114,14 @@ public:
     bool isERMDriver() const            { return isERM;                   }
     bool isLRADriver() const            { return isLRA;                   }
     const char* getDeviceName() const   { return HMS_DRV26XX_DEVICE_NAME; }
-    uint8_t getDeviceAddress() const    { return HMS_DRV26XX_DEVICE_ADDR; }
+    uint8_t getDeviceAddress() const    { return deviceAddress;           }
 
 private:
-  bool isERM        = true;
-  bool isLRA        = false;
-  bool initialized  = false;
+  
+  bool      isERM         = true;
+  bool      isLRA         = false;
+  bool      initialized   = false;
+  uint8_t   deviceAddress = HMS_DRV26XX_DEVICE_ADDR;
   #if defined(HMS_DRV26XX_PLATFORM_ARDUINO)
     TwoWire *drv6xx_wire = NULL;
   #elif defined(HMS_DRV26XX_PLATFORM_ESP_IDF)

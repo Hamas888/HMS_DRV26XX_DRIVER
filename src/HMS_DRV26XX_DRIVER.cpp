@@ -14,29 +14,30 @@ HMS_DRV26XX::~HMS_DRV26XX() {
 }
 
 #if defined(HMS_DRV26XX_PLATFORM_ARDUINO)
-HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(TwoWire *wire) {
+HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(TwoWire *wire, uint8_t address) {
     drv6xx_wire = wire;
+    deviceAddress = address;
     drv6xx_wire->begin();
-    drv6xx_wire->beginTransmission(HMS_DRV26XX_DEVICE_ADDR);
+    drv6xx_wire->beginTransmission(deviceAddress);
     if (drv6xx_wire->endTransmission() != 0) {
         #ifdef HMS_DRV26XX_LOGGER_ENABLED
-            drvLogger.error("Device not found at address 0x%02X", HMS_DRV26XX_DEVICE_ADDR);
+            drvLogger.error("Device not found at address 0x%02X", deviceAddress);
         #endif
         return HMS_DRV26XX_NOT_FOUND;                                                       // Device not found
     }
 
     init();
     #ifdef HMS_DRV26XX_LOGGER_ENABLED
-        drvLogger.debug("Device initialized at address 0x%02X", HMS_DRV26XX_DEVICE_ADDR);
+        drvLogger.debug("Device initialized at address 0x%02X", deviceAddress);
     #endif
     return HMS_DRV26XX_OK;
 }
 
 uint8_t HMS_DRV26XX::readRegister(uint8_t registerAddr) {
-    drv6xx_wire->beginTransmission(HMS_DRV26XX_DEVICE_ADDR);
+    drv6xx_wire->beginTransmission(deviceAddress);
     drv6xx_wire->write(registerAddr);
     drv6xx_wire->endTransmission(false);                                                    // Send repeated start
-    drv6xx_wire->requestFrom(HMS_DRV26XX_DEVICE_ADDR, 1);
+    drv6xx_wire->requestFrom(deviceAddress, 1);
     if (drv6xx_wire->available()) {
         return drv6xx_wire->read();
     }
@@ -45,18 +46,26 @@ uint8_t HMS_DRV26XX::readRegister(uint8_t registerAddr) {
 
 void HMS_DRV26XX::writeRegister(uint8_t registerAddr, uint8_t value) {
     uint8_t buffer[2] = {registerAddr, value};
-    drv6xx_wire->beginTransmission(HMS_DRV26XX_DEVICE_ADDR);
+    drv6xx_wire->beginTransmission(deviceAddress);
     drv6xx_wire->write(buffer, sizeof(buffer));
     drv6xx_wire->endTransmission();
 }   
 
 #elif defined(HMS_DRV26XX_PLATFORM_ZEPHYR)
-HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(const struct device *i2c_dev) {
+HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(const struct device *i2c_dev, uint8_t address) {
+    if (i2c_dev == NULL) {
+        #ifdef HMS_DRV26XX_LOGGER_ENABLED
+            drvLogger.error("I2C device is NULL");
+        #endif
+        return HMS_DRV26XX_ERROR;
+    }
+    
     drv6xx_i2c_dev = (struct device *)i2c_dev;
+    deviceAddress = address;
 
     if (!device_is_ready(drv6xx_i2c_dev)) {
         #ifdef HMS_DRV26XX_LOGGER_ENABLED
-            drvLogger.error("Device not found at address 0x%02X", HMS_DRV26XX_DEVICE_ADDR);
+            drvLogger.error("Device not found at address 0x%02X", deviceAddress);
         #endif
         return HMS_DRV26XX_ERROR;
     }
@@ -76,7 +85,7 @@ HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(const struct device *i2c_dev) {
 
     init();
     #ifdef HMS_DRV26XX_LOGGER_ENABLED
-        drvLogger.debug("Device initialized at address 0x%02X", HMS_DRV26XX_DEVICE_ADDR);
+        drvLogger.debug("Device initialized at address 0x%02X", deviceAddress);
     #endif
 
     return HMS_DRV26XX_OK;
@@ -84,7 +93,7 @@ HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(const struct device *i2c_dev) {
 
 uint8_t HMS_DRV26XX::readRegister(uint8_t registerAddr) {
     uint8_t value = 0;
-    int ret = i2c_reg_read_byte(drv6xx_i2c_dev, HMS_DRV26XX_DEVICE_ADDR, registerAddr, &value);
+    int ret = i2c_reg_read_byte(drv6xx_i2c_dev, deviceAddress, registerAddr, &value);
     if (ret != 0) {
         return 0; // Return 0 if read failed
     }
@@ -92,11 +101,11 @@ uint8_t HMS_DRV26XX::readRegister(uint8_t registerAddr) {
 }
 
 void HMS_DRV26XX::writeRegister(uint8_t registerAddr, uint8_t value) {
-    i2c_reg_write_byte(drv6xx_i2c_dev, HMS_DRV26XX_DEVICE_ADDR, registerAddr, value);
+    i2c_reg_write_byte(drv6xx_i2c_dev, deviceAddress, registerAddr, value);
 }
 
 #elif defined(HMS_DRV26XX_PLATFORM_ESP_IDF)
-HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(i2c_port_t i2c_port) {
+HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(i2c_port_t i2c_port, uint8_t address) {
     // ESP-IDF-specific initialization code here
     return HMS_DRV26XX_OK;
 }
@@ -111,7 +120,7 @@ void HMS_DRV26XX::writeRegister(uint8_t registerAddr, uint8_t value) {
 }
 
 #elif defined(HMS_DRV26XX_PLATFORM_STM32_HAL)
-HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(I2C_HandleTypeDef *hi2c) {
+HMS_DRV26XX_StatusTypeDef HMS_DRV26XX::begin(I2C_HandleTypeDef *hi2c, uint8_t address) {
     // STM32 HAL-specific initialization code here
     return HMS_DRV26XX_OK;
 }
